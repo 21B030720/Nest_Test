@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BullService } from '../bull/bull.service';
+import { AppRedisService } from 'src/common/app-redis/app-redis.service';
+
 
 @Injectable()
 export class UserService {
@@ -12,6 +14,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private bullService: BullService,  // To manage background jobs
+    private redisService: AppRedisService,
   ) {}
 
   // Create a new user
@@ -54,8 +57,47 @@ export class UserService {
     return this.userRepository.find(); // Fetch all users from the database
   }
 
+  async getAllUsersFromRedis(): Promise<User[]> {
+    const users = await this.redisService.getAllUsers();
+    return users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      status: user.status,
+    } as User))
+  }
+
   async findUserById(userId: number): Promise<User> {
     return this.userRepository.findOne({ where: { id: userId } });
+  }
+
+  async getUserById(id: number): Promise<User> {
+    // Check if the user exists in the cache first
+    const cachedUser = await this.redisService.get(`user:${id}`);
+    if (cachedUser) {
+      console.log("User exists in Redis");
+      return JSON.parse(cachedUser); // Return user data from cache
+    }
+
+    // If user is not in cache, query the database
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+    if (!user) {
+      throw new NotFoundException({
+        statusCode: 400,
+        message: 'ERR_USER_NOT_FOUND',
+      });
+    }
+
+    // Store the user data in Redis cache for 30 minutes
+    await this.redisService.set(
+      `user:${id}`,
+      JSON.stringify(user),
+      1800, // Cache expiration time in seconds (30 minutes)
+    );
+
+    return user;
   }
 
 }

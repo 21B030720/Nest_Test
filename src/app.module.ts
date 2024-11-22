@@ -4,7 +4,8 @@ import { BullModule } from '@nestjs/bull';
 import { User } from './modules/user/entities/user.entity';
 import { ConfigModule } from '@nestjs/config'; // For environment variables
 import { UserModule } from './modules/user/user.module';
-import { RedisService } from './common/redis/redis.service';
+import { AppRedisService } from './common/app-redis/app-redis.service';
+import { AppRedisModule } from './common/app-redis/app-redis.module';
 
 
 @Module({
@@ -30,8 +31,9 @@ import { RedisService } from './common/redis/redis.service';
       },
     }),
     UserModule,
-    BullModule
+    BullModule,
+    AppRedisModule
   ],
-  providers: [RedisService],
+  providers: [AppRedisService],
 })
 export class AppModule {}
