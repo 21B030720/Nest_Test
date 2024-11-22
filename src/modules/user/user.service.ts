@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -17,17 +17,20 @@ export class UserService {
     private redisService: AppRedisService,
   ) {}
 
+  // Check if the email already exists
+  async isEmailUnique(email: string): Promise<boolean> {
+    const existingUser = await this.userRepository.findOne({ where: { email } });
+    return !existingUser;
+  }
+
   // Create a new user
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { email } = createUserDto;
 
     // Check if the email already exists
-    const existingUser = await this.userRepository.findOne({
-      where: { email },
-    });
-
-    if (existingUser) {
-      throw new Error('ERR_USER_EMAIL_EXISTS');
+    const isUnique = await this.isEmailUnique(email);
+    if (!isUnique) {
+      throw new HttpException('ERR_USER_EMAIL_EXISTS', 400)
     }
 
     // Create a new user with default status = false

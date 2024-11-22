@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, HttpException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
@@ -46,28 +46,13 @@ export class UserController {
   // Post(Create) User
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({
-    status: 201,
-    description: 'User created successfully.',
-    type: User,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Email already exists.',
-  })
+  @ApiResponse({ status: 201, description: 'User created successfully', type: User })
   @ApiBody({
     description: 'Details of the user to be created',
     type: CreateUserDto,
   })
   async createUser(@Body() createUserDto: CreateUserDto) {
-    try {
-      const user = await this.userService.createUser(createUserDto);
-      return user;
-    } catch (error) {
-      if (error.message === 'ERR_USER_EMAIL_EXISTS') {
-        throw new Error('ERR_USER_EMAIL_EXISTS');
-      }
-      throw error;
-    }
+    const user = await this.userService.createUser(createUserDto);
+    return user;
   }
 }

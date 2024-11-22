@@ -16,19 +16,19 @@ import { ProxyModule } from './common/proxy/proxy.module';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,       // Should now be 'localhost'
+      host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT, 10) || 5432,
-      username: process.env.DB_USERNAME, // 'myuser'
-      password: process.env.DB_PASSWORD, // 'mypassword'
-      database: process.env.DB_NAME,     // 'mydatabase'
-      entities: [User], // Entities for PostgreSQL
-      synchronize: false, // Set to false in production to avoid data loss
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: [User],
+      synchronize: true,
     }),
     BullModule.registerQueue({
       name: 'email-verification', // Queue name
       redis: {
-        host: process.env.REDIS_HOST || 'localhost', // Redis host (default: localhost)
-        port: parseInt(process.env.REDIS_PORT, 10) || 6379, // Redis port (default: 6379)
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT, 10) || 6379,
       },
     }),
     UserModule,
