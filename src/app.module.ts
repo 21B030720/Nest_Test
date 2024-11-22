@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config'; // For environment variables
 import { UserModule } from './modules/user/user.module';
 import { AppRedisService } from './common/app-redis/app-redis.service';
 import { AppRedisModule } from './common/app-redis/app-redis.module';
+import { ProxyModule } from './common/proxy/proxy.module';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { AppRedisModule } from './common/app-redis/app-redis.module';
     }),
     UserModule,
     BullModule,
-    AppRedisModule
+    AppRedisModule,
+    ProxyModule
   ],
   providers: [AppRedisService],
 })
