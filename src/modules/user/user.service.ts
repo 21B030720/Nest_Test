@@ -1,10 +1,10 @@
-import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BullService } from '../bull/bull.service';
-import { AppRedisService } from 'src/common/app-redis/app-redis.service';
+import { AppRedisService } from 'src/modules/app-redis/app-redis.service';
 
 
 @Injectable()

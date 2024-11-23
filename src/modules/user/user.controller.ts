@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query, HttpException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
@@ -7,6 +7,7 @@ import { GetUserByIdDto } from './dto/get-user-by-id.dto';
 
 @Controller('users')
 export class UserController {
+  
   constructor(private readonly userService: UserService) {}
 
   // Get all Users in Postgre
@@ -14,7 +15,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'The list of users', type: [User] })
   async getAllUsers(): Promise<User[]> {
-    return this.userService.getAllUsers(); // Fetch and return all users
+    return this.userService.getAllUsers();
   }
 
   // Get all Users in Redis Storage
@@ -22,7 +23,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users from Redis' })
   @ApiResponse({ status: 200, description: 'The list of users', type: [User] })
   async getAllUsersFromRedis(): Promise<User[]> {
-    return this.userService.getAllUsersFromRedis(); // Fetch and return all users
+    return this.userService.getAllUsersFromRedis();
   }
 
   // Get User in Postgre or in Redis(30min storage)
@@ -55,4 +56,5 @@ export class UserController {
     const user = await this.userService.createUser(createUserDto);
     return user;
   }
+
 }

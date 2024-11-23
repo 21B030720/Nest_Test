@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as HttpsProxyAgent from 'https-proxy-agent';
 import { Injectable } from '@nestjs/common';
-import { proxyConfig } from './proxy.config';
+import { proxyConfig } from './configs/proxy.config';
 
 @Injectable()
 export class ProxyService {

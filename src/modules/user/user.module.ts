@@ -6,14 +6,14 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { BullService } from '../bull/bull.service';
 import { EmailVerificationProcessor } from '../bull/bull.processor';
-import { AppRedisModule } from 'src/common/app-redis/app-redis.module';
+import { AppRedisModule } from 'src/modules/app-redis/app-redis.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     AppRedisModule,
     BullModule.registerQueue({
-      name: 'email-verification', // Ensure the queue name matches
+      name: 'email-verification',
     }),
   ],
   controllers: [UserController],

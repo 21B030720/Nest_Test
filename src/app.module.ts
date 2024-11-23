@@ -4,12 +4,13 @@ import { BullModule } from '@nestjs/bull';
 import { User } from './modules/user/entities/user.entity';
 import { ConfigModule } from '@nestjs/config'; // For environment variables
 import { UserModule } from './modules/user/user.module';
-import { AppRedisService } from './common/app-redis/app-redis.service';
-import { AppRedisModule } from './common/app-redis/app-redis.module';
-import { ProxyModule } from './common/proxy/proxy.module';
+import { AppRedisService } from './modules/app-redis/app-redis.service';
+import { AppRedisModule } from './modules/app-redis/app-redis.module';
+import { ProxyModule } from './modules/proxy/proxy.module';
 
 
 @Module({
+
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
@@ -37,5 +38,6 @@ import { ProxyModule } from './common/proxy/proxy.module';
     ProxyModule
   ],
   providers: [AppRedisService],
+  
 })
 export class AppModule {}

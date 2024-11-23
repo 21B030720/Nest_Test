@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from 'src/modules/user/user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from 'src/modules/user/entities/user.entity';
-import { AppRedisService } from 'src/common/app-redis/app-redis.service';
+import { AppRedisService } from 'src/modules/app-redis/app-redis.service';
 import { BullService } from 'src/modules/bull/bull.service';
 
 describe('UserService', () => {
